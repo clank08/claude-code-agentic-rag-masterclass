@@ -15,7 +15,7 @@ description: Onboard Claude Code into the codebase
    - Core schemas/models
 
 3. **Check state**
-   - Run `git status` and `git log -5 --oneline`
+   - Run `git status` and `git log -10 --oneline`
 
 ## Output
 

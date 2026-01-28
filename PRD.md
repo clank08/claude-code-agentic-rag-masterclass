@@ -53,7 +53,7 @@ Technically-minded people who want to build production RAG systems using AI codi
 | Frontend | React + TypeScript + Vite + Tailwind + shadcn/ui |
 | Backend | Python + FastAPI |
 | Database | Supabase (Postgres + pgvector + Auth + Storage + Realtime) |
-| LLM (Module 1) | OpenAI (Assistants API for managed RAG) |
+| LLM (Module 1) | OpenAI (Responses API for managed RAG) |
 | LLM (Module 2+) | OpenRouter (model-agnostic, raw completions) |
 | Observability | LangSmith |
 
@@ -68,7 +68,7 @@ Technically-minded people who want to build production RAG systems using AI codi
 
 ## Module 1: The App Shell + Observability
 
-**Build:** Auth, chat UI, OpenAI Assistants API (manages threads + file_search), LangSmith tracing
+**Build:** Auth, chat UI, OpenAI Responses API (manages threads + file_search), LangSmith tracing
 
 **Learn:** What RAG is, why managed RAG exists, its limitations (OpenAI handles memory and retrieval - black box)
 
@@ -100,7 +100,7 @@ Technically-minded people who want to build production RAG systems using AI codi
 
 ## Module 5: Multi-Format Support
 
-**Build:** PDF/DOCX/HTML/Markdown via Unstructured or docling, cascade deletes
+**Build:** PDF/DOCX/HTML/Markdown via docling, cascade deletes
 
 **Learn:** Document parsing challenges, format considerations
 
@@ -130,18 +130,10 @@ Technically-minded people who want to build production RAG systems using AI codi
 
 ---
 
-## Module 9: Deployment
-
-**Build:** Railway (backend), Vercel (frontend), production Supabase
-
-**Learn:** Deployment, environment management
-
----
-
 ## Success Criteria
 
 By the end, students should have:
-- ✅ A deployed, working RAG application they built with AI assistance
+- ✅ A working RAG application they built with AI assistance
 - ✅ Deep understanding of RAG concepts (chunking, embedding, retrieval, reranking)
 - ✅ Understanding of codebase structure - what lives where, how pieces connect
 - ✅ Ability to direct AI coding tools to build new features
