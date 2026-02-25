@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.middleware.auth import get_current_user
-from app.models.schemas import AuthenticatedUser, ThreadResponse
+from app.models.schemas import AuthenticatedUser, ThreadResponse, MessageResponse
 from app.database.supabase_client import supabase
 
 router = APIRouter(prefix="/api/threads", tags=["threads"])
@@ -26,6 +26,31 @@ async def create_thread(user: AuthenticatedUser = Depends(get_current_user)):
         .execute()
     )
     return result.data[0]
+
+
+@router.get("/{thread_id}/messages", response_model=list[MessageResponse])
+async def get_messages(
+    thread_id: str, user: AuthenticatedUser = Depends(get_current_user)
+):
+    # Verify thread belongs to user
+    thread = (
+        supabase.table("threads")
+        .select("id")
+        .eq("id", thread_id)
+        .eq("user_id", user.id)
+        .execute()
+    )
+    if not thread.data:
+        raise HTTPException(status_code=404, detail="Thread not found")
+    result = (
+        supabase.table("messages")
+        .select("*")
+        .eq("thread_id", thread_id)
+        .eq("user_id", user.id)
+        .order("created_at")
+        .execute()
+    )
+    return result.data
 
 
 @router.delete("/{thread_id}")

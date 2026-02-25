@@ -38,20 +38,37 @@ async def chat(
         )
         thread_id = result.data[0]["id"]
 
+    # Save user message
+    supabase.table("messages").insert({
+        "thread_id": thread_id,
+        "user_id": user.id,
+        "role": "user",
+        "content": request.message,
+    }).execute()
+
     async def event_generator():
         # Send thread_id first so frontend knows which thread we're in
         yield {"event": "thread_id", "data": json.dumps({"thread_id": thread_id})}
 
         response_id = None
+        full_content = ""
         async for event_type, data in stream_chat_response(
             message=request.message,
             previous_response_id=previous_response_id,
             user_id=user.id,
         ):
             if event_type == "text_delta":
+                full_content += data
                 yield {"event": "text_delta", "data": json.dumps({"token": data})}
             elif event_type == "done":
                 response_id = data
+                # Save assistant message
+                supabase.table("messages").insert({
+                    "thread_id": thread_id,
+                    "user_id": user.id,
+                    "role": "assistant",
+                    "content": full_content,
+                }).execute()
                 # Update thread with latest response ID
                 (
                     supabase.table("threads")

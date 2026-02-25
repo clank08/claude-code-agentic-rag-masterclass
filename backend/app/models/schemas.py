@@ -17,3 +17,11 @@ class ThreadResponse(BaseModel):
     title: str
     created_at: datetime
     updated_at: datetime
+
+
+class MessageResponse(BaseModel):
+    id: str
+    thread_id: str
+    role: str
+    content: str
+    created_at: datetime

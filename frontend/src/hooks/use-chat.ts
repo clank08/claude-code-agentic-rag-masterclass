@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { apiStream } from "@/lib/api";
+import { apiGet, apiStream } from "@/lib/api";
 import { readSSEStream } from "@/lib/sse";
 import type { Message } from "@/types";
 
@@ -8,10 +8,13 @@ export function useChat(threadId: string | undefined) {
   const [streamingContent, setStreamingContent] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
 
-  // Reset messages when thread changes
+  // Load messages when thread changes
   useEffect(() => {
     setMessages([]);
     setStreamingContent("");
+    if (threadId) {
+      apiGet<Message[]>(`/api/threads/${threadId}/messages`).then(setMessages).catch(console.error);
+    }
   }, [threadId]);
 
   const sendMessage = useCallback(
