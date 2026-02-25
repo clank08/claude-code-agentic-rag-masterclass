@@ -25,6 +25,10 @@ async def stream_chat_response(
             input=message,
             stream=True,
             previous_response_id=previous_response_id,
+            tools=[{
+                "type": "file_search",
+                "vector_store_ids": [settings.openai_vector_store_id],
+            }],
         )
 
         async for event in stream:
