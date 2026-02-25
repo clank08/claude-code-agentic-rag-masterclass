@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Plus, Trash2, LogOut, MessageSquare } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
-import { useThreads } from "@/hooks/use-threads";
+import { useThreadsContext } from "@/contexts/threads-context";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
-  const { threads, createThread, deleteThread } = useThreads();
+  const { threads, createThread, deleteThread } = useThreadsContext();
   const navigate = useNavigate();
   const { threadId: activeThreadId } = useParams();
 
