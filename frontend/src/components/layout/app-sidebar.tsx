@@ -1,0 +1,95 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { Plus, Trash2, LogOut, MessageSquare } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
+import { useThreads } from "@/hooks/use-threads";
+import { Button } from "@/components/ui/button";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+} from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+
+export function AppSidebar() {
+  const { user, signOut } = useAuth();
+  const { threads, createThread, deleteThread } = useThreads();
+  const navigate = useNavigate();
+  const { threadId: activeThreadId } = useParams();
+
+  const handleNewChat = async () => {
+    navigate("/");
+  };
+
+  const handleSelectThread = (threadId: string) => {
+    navigate(`/thread/${threadId}`);
+  };
+
+  const handleDeleteThread = async (e: React.MouseEvent, threadId: string) => {
+    e.stopPropagation();
+    await deleteThread(threadId);
+    if (activeThreadId === threadId) {
+      navigate("/");
+    }
+  };
+
+  return (
+    <Sidebar>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={handleNewChat} className="justify-center">
+              <Plus className="h-4 w-4" />
+              <span>New Chat</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <Separator />
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Conversations</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {threads.map((thread) => (
+                <SidebarMenuItem key={thread.id}>
+                  <SidebarMenuButton
+                    isActive={thread.id === activeThreadId}
+                    onClick={() => handleSelectThread(thread.id)}
+                    className="group"
+                  >
+                    <MessageSquare className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{thread.title}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="ml-auto h-6 w-6 opacity-0 group-hover:opacity-100"
+                      onClick={(e) => handleDeleteThread(e, thread.id)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <Separator />
+        <div className="flex items-center justify-between p-2">
+          <span className="truncate text-sm text-muted-foreground">{user?.email}</span>
+          <Button variant="ghost" size="icon" onClick={signOut}>
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
