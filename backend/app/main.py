@@ -35,5 +35,5 @@ async def health():
 async def openai_exception_handler(request: Request, exc: OpenAIError):
     return JSONResponse(
         status_code=502,
-        content={"detail": f"OpenAI error: {str(exc)}"},
+        content={"detail": f"LLM provider error: {str(exc)}"},
     )

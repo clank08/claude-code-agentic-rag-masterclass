@@ -1,6 +1,6 @@
 interface SSECallbacks {
   onToken: (token: string) => void;
-  onDone: (data: { response_id: string; thread_id: string }) => void;
+  onDone: (data: { thread_id: string }) => void;
   onThreadId: (threadId: string) => void;
   onError: (error: string) => void;
 }
