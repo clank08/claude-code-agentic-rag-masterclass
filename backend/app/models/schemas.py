@@ -37,3 +37,18 @@ class DocumentResponse(BaseModel):
     chunk_count: int
     created_at: datetime
     updated_at: datetime
+
+
+class UserSettingsRequest(BaseModel):
+    llm_base_url: str | None = None
+    llm_model: str | None = None
+
+
+class UserSettingsResponse(BaseModel):
+    llm_base_url: str | None = None
+    llm_model: str | None = None
+
+
+class SettingsDefaultsResponse(BaseModel):
+    llm_base_url: str
+    llm_model: str
