@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { LoginPage } from "@/pages/login";
 import { SignupPage } from "@/pages/signup";
 import { ChatPage } from "@/pages/chat";
+import { DocumentsPage } from "@/pages/documents";
 import { AppLayout } from "@/components/layout/app-layout";
 import type { ReactNode } from "react";
 
@@ -28,6 +29,7 @@ export function AppRouter() {
         <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
         <Route path="/" element={<ProtectedRoute><AppLayout><ChatPage /></AppLayout></ProtectedRoute>} />
         <Route path="/thread/:threadId" element={<ProtectedRoute><AppLayout><ChatPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/documents" element={<ProtectedRoute><AppLayout><DocumentsPage /></AppLayout></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

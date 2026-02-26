@@ -1,5 +1,5 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Plus, Trash2, LogOut, MessageSquare } from "lucide-react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { Plus, Trash2, LogOut, MessageSquare, FileText } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useThreadsContext } from "@/contexts/threads-context";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { threads, createThread, deleteThread } = useThreadsContext();
   const navigate = useNavigate();
+  const location = useLocation();
   const { threadId: activeThreadId } = useParams();
 
   const handleNewChat = async () => {
@@ -53,6 +54,31 @@ export function AppSidebar() {
       </SidebarHeader>
       <Separator />
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={location.pathname === "/" || location.pathname.startsWith("/thread")}
+                  onClick={() => navigate("/")}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  <span>Chat</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={location.pathname === "/documents"}
+                  onClick={() => navigate("/documents")}
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>Documents</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <Separator />
         <SidebarGroup>
           <SidebarGroupLabel>Conversations</SidebarGroupLabel>
           <SidebarGroupContent>
