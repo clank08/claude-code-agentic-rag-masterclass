@@ -1,5 +1,6 @@
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { Plus, Trash2, LogOut, MessageSquare, FileText } from "lucide-react";
+import { Plus, Trash2, LogOut, MessageSquare, FileText, Settings } from "lucide-react";
+import { SettingsDialog } from "@/components/settings/settings-dialog";
 import { useAuth } from "@/contexts/auth-context";
 import { useThreadsContext } from "@/contexts/threads-context";
 import { Button } from "@/components/ui/button";
@@ -111,9 +112,12 @@ export function AppSidebar() {
         <Separator />
         <div className="flex items-center justify-between p-2">
           <span className="truncate text-sm text-muted-foreground">{user?.email}</span>
-          <Button variant="ghost" size="icon" onClick={signOut}>
-            <LogOut className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <SettingsDialog />
+            <Button variant="ghost" size="icon" onClick={signOut}>
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
