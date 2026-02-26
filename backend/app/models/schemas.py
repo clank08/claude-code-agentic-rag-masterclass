@@ -25,3 +25,15 @@ class MessageResponse(BaseModel):
     role: str
     content: str
     created_at: datetime
+
+
+class DocumentResponse(BaseModel):
+    id: str
+    filename: str
+    mime_type: str
+    file_size: int
+    status: str
+    error_message: str | None = None
+    chunk_count: int
+    created_at: datetime
+    updated_at: datetime
