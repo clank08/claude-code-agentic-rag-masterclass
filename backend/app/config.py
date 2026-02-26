@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     # Retrieval
     retrieval_top_k: int = 5
-    retrieval_score_threshold: float = 0.7
+    retrieval_score_threshold: float = 0.3
 
     # Supabase
     supabase_url: str

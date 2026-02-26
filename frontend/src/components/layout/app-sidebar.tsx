@@ -92,14 +92,14 @@ export function AppSidebar() {
                   >
                     <MessageSquare className="h-4 w-4 shrink-0" />
                     <span className="truncate">{thread.title}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="ml-auto h-6 w-6 opacity-0 group-hover:opacity-100"
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-md opacity-0 hover:bg-accent group-hover:opacity-100"
                       onClick={(e) => handleDeleteThread(e, thread.id)}
                     >
                       <Trash2 className="h-3 w-3" />
-                    </Button>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
