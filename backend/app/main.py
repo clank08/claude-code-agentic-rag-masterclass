@@ -10,7 +10,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from openai import OpenAIError
-from app.routers import chat, threads, documents, settings
+from app.routers import chat, threads, documents
+import app.routers.settings as settings_router
 
 app = FastAPI(title="RAG Masterclass API")
 
@@ -25,7 +26,7 @@ app.add_middleware(
 app.include_router(chat.router)
 app.include_router(threads.router)
 app.include_router(documents.router)
-app.include_router(settings.router)
+app.include_router(settings_router.router)
 
 
 @app.get("/api/health")
