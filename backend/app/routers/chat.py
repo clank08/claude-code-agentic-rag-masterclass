@@ -18,6 +18,19 @@ def _build_messages(system_prompt: str, history: list[dict]) -> list[dict]:
     return messages
 
 
+def _get_user_llm_settings(user_id: str) -> dict:
+    """Load user's LLM settings. Returns dict with model and base_url (may be None)."""
+    result = (
+        supabase.table("user_settings")
+        .select("llm_base_url, llm_model")
+        .eq("user_id", user_id)
+        .execute()
+    )
+    if result.data:
+        return result.data[0]
+    return {}
+
+
 @router.post("/chat")
 async def chat(
     request: ChatRequest, user: AuthenticatedUser = Depends(get_current_user)
@@ -67,6 +80,7 @@ async def chat(
     messages = _build_messages(settings.llm_system_prompt, history_result.data)
 
     async def event_generator():
+        user_llm_settings = _get_user_llm_settings(user.id)
         yield {"event": "thread_id", "data": json.dumps({"thread_id": thread_id})}
 
         full_content = ""
@@ -81,6 +95,8 @@ async def chat(
             async for event_type, data in stream_chat_response(
                 messages=current_messages,
                 user_id=user.id,
+                model=user_llm_settings.get("llm_model"),
+                base_url=user_llm_settings.get("llm_base_url"),
             ):
                 if event_type == "text_delta":
                     round_content += data

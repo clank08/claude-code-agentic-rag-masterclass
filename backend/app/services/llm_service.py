@@ -3,12 +3,31 @@ from openai import AsyncOpenAI
 from langsmith.wrappers import wrap_openai
 from app.config import settings
 
-client = wrap_openai(
+# Default client using env var config
+_default_client = wrap_openai(
     AsyncOpenAI(
         base_url=settings.llm_base_url,
         api_key=settings.llm_api_key,
     )
 )
+
+# Cache custom clients by base_url to avoid creating new ones per request
+_custom_clients: dict[str, AsyncOpenAI] = {}
+
+
+def _get_client(base_url: str | None) -> AsyncOpenAI:
+    """Get an OpenAI client for the given base_url, or the default."""
+    if not base_url or base_url == settings.llm_base_url:
+        return _default_client
+    if base_url not in _custom_clients:
+        _custom_clients[base_url] = wrap_openai(
+            AsyncOpenAI(
+                base_url=base_url,
+                api_key=settings.llm_api_key,
+            )
+        )
+    return _custom_clients[base_url]
+
 
 # Tool definitions for retrieval
 TOOLS = [
@@ -32,13 +51,20 @@ TOOLS = [
 ]
 
 
-async def stream_chat_response(messages: list[dict], user_id: str | None = None):
+async def stream_chat_response(
+    messages: list[dict],
+    user_id: str | None = None,
+    model: str | None = None,
+    base_url: str | None = None,
+):
     """Stream a chat completion response.
 
     Args:
         messages: Full conversation history as Chat Completions messages array.
                   Must include system prompt as first message.
         user_id: For LangSmith trace metadata.
+        model: Override model (from user settings). Falls back to env var default.
+        base_url: Override base_url (from user settings). Falls back to env var default.
 
     Yields tuples of (event_type, data):
         - ("text_delta", token_text) — streamed text token
@@ -46,9 +72,12 @@ async def stream_chat_response(messages: list[dict], user_id: str | None = None)
         - ("done", None) — stream complete
         - ("error", error_message) — error occurred
     """
+    client = _get_client(base_url)
+    use_model = model or settings.llm_model
+
     try:
         stream = await client.chat.completions.create(
-            model=settings.llm_model,
+            model=use_model,
             messages=messages,
             tools=TOOLS,
             stream=True,
